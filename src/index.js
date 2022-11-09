@@ -37,4 +37,9 @@ app.get('/talker/:id', async (_request, response) => {
     return response.status(HTTP_OK_STATUS).json(idTlkr);
 });
 
+app.post('/login', async (_request, response) => {
+const tokenAleatorio = Math.random().toString().slice(-16);
+response.status(HTTP_OK_STATUS).json({ token: tokenAleatorio });
+});
+
 module.exports = app;
