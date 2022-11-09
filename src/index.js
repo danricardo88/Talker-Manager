@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { talkerData } = require('./util/talker');
 
+const testRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]?$/i;
 const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
@@ -38,24 +39,35 @@ app.get('/talker/:id', async (_request, response) => {
     return response.status(HTTP_OK_STATUS).json(idTlkr);
 });
 
-function handleLogin(_request, response, prox) {
-  const { email, password } = _request.body;
-  if (email === undefined) {
+const handleLogin = (_request, response, prox) => {
+  const { email } = _request.body;
+  if (!email) {
     return response.status(NOT_VALIDATED)
     .json({ message: 'O campo "email" é obrigatório' });
-  } if (email !== 'emailtaerradocabra@hotmail.com') {
+  } 
+  if (!testRegex.test(email)) {
     return response.status(NOT_VALIDATED)
     .json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  } if (password === undefined) {
-    return response.status(NOT_VALIDATED).json({ message: 'O campo "password" é obrigatório' });
-  } if (password.length < 6) {
-    return response.status(NOT_VALIDATED)
-    .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  } prox();
-}
+  } 
+  prox();
+};
 
-app.post('/login', handleLogin, async (_request, response) => {
+const loginHandle = (_request, response, prox) => {
+  const { password } = _request.body;
+  if (!password) {
+    return response.status(NOT_VALIDATED)
+    .json({ "message": "O campo \"password\" é obrigatório" });
+  } 
+  if (password.length < 6) {
+    return response.status(NOT_VALIDATED)
+    .json({  "message": "O \"password\" deve ter pelo menos 6 caracteres" });
+  } 
+  prox();
+};
+
+app.post('/login', handleLogin, loginHandle, async (_request, response) => {
   const tokenAleatorio = Math.random().toString().slice(-16);
   response.status(HTTP_OK_STATUS).json({ token: tokenAleatorio });
   });
+
 module.exports = app;
