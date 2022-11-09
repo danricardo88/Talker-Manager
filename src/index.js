@@ -56,11 +56,11 @@ const loginHandle = (_request, response, prox) => {
   const { password } = _request.body;
   if (!password) {
     return response.status(NOT_VALIDATED)
-    .json({ "message": "O campo \"password\" é obrigatório" });
+    .json({ message: 'O campo "password" é obrigatório' });
   } 
   if (password.length < 6) {
     return response.status(NOT_VALIDATED)
-    .json({  "message": "O \"password\" deve ter pelo menos 6 caracteres" });
+    .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   } 
   prox();
 };
