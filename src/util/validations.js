@@ -28,7 +28,7 @@ const handleToken = (_request, response, prox) => {
   if (authorization.length !== 16) {
     return response.status(FAIL_TOKEN).json({ message: 'Token inválido' });
   }
-  if (authorization !== 'string') {
+  if (typeof authorization !== 'string') {
     return response.status(FAIL_TOKEN).json({ message: 'Token inválido' });
   }
   prox();
@@ -37,7 +37,7 @@ const handleToken = (_request, response, prox) => {
 const handleValidityName = (_request, response, prox) => {
   const { name } = _request.body;
   if (name === undefined) {
-    return response.status(NOT_VALIDATED).json({ message: 'O campo "name" é obrigatóroi' });
+    return response.status(NOT_VALIDATED).json({ message: 'O campo "name" é obrigatório' });
   }
   if (name.length < 3) {
     return response.status(NOT_VALIDATED)
