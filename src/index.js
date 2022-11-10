@@ -1,16 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { talkerData /* handleLogin */ } = require('./util/talker');
+const { talkerData, writeNemTlkrIdData } = require('./util/talker');
+const { 
+  handleLogin, 
+  handleToken, 
+  handleValidityName, 
+  handleValidityAge, 
+  handleValidityTalk, 
+  handleValidityWatchedAt, 
+  handleValidityRate } = require('./util/validations');
+
+// const { handleLogin } = require('./util/test');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
+const HTTP_OK_NEWTLKR = 201;
 const HTTP_ERRO = 404;
 const PORT = '3000';
+
+// const NOT_VALIDATED = 400;
 // const testRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]{2-3}/i; <-- dando problema.
-const NOT_VALIDATED = 400;
 // const tokenAleatorio = Math.random().toString().slice(-16);
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -40,28 +52,20 @@ app.get('/talker/:id', async (_request, response) => {
     return response.status(HTTP_OK_STATUS).json(idTlkr);
 });
 
-const handleLogin = (_request, response, prox) => {
-  const { email, password } = _request.body;
-   if (email === undefined) {
-    return response.status(NOT_VALIDATED).json({ message: 'O campo "email" é obrigatório' });
-  } 
-  if (email !== 'deferiascomigo@gmail.com') {
-    return response.status(NOT_VALIDATED)
-    .json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  } 
-  if (password === undefined) {
-    return response.status(NOT_VALIDATED).json({ message: 'O campo "password" é obrigatório' });
-  } 
-  if (password.length < 6) {
-    return response.status(NOT_VALIDATED)
-    .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  } 
-  prox();
-};
-
-app.post('/login', handleLogin, async (_request, response) => {
+app.post('/login', handleLogin, (_request, response) => {
   const tokenAleatorio = Math.random().toString().slice(-16);
   response.status(HTTP_OK_STATUS).json({ token: tokenAleatorio });
-  });
+});
+
+app.post('/talker', 
+  handleToken, handleValidityName,
+  handleValidityAge, handleValidityTalk, 
+  handleValidityWatchedAt, handleValidityRate,
+
+async (_request, response) => {
+  const newTalker = _request.body;
+  const withNewTlkrId = await writeNemTlkrIdData(newTalker);
+  return response.status(HTTP_OK_NEWTLKR).json(withNewTlkrId);
+});
 
 module.exports = app;

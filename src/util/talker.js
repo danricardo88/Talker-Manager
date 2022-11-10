@@ -1,8 +1,5 @@
-const { readFile } = require('fs').promises;
+const { readFile, writeFile } = require('fs').promises;
 const path = require('path');
-
-// const testRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]{2-3}/i;
-// const NOT_VALIDATED = 400;
 
 async function talkerData() {
   try {
@@ -13,25 +10,16 @@ async function talkerData() {
   } 
 }
 
-// const handleLogin = (request, response, prox) => {
-//   const { email, password } = request.body;
-//   if (!password) {
-//     return response.status(NOT_VALIDATED)
-//     .json({ message: 'O campo "password" é obrigatório' });
-//   } 
-//   if (password.length < 6) {
-//     return response.status(NOT_VALIDATED)
-//     .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-//   } 
-//   if (!email) {
-//     return response.status(NOT_VALIDATED)
-//     .json({ message: 'O campo "email" é obrigatório' });
-//   } 
-//   if (!testRegex.test(email)) {
-//     return response.status(NOT_VALIDATED)
-//     .json({ message: 'O "email" deve ter o formato "email@email.com"' });
-//   } 
-//   prox();
-// };
+async function writeNemTlkrIdData(newTalker) {
+  try {
+    const oldTalkers = await talkerData();
+    const withNewTlkrId = { id: oldTalkers.length + 1, ...newTalker };
+    const allTalkers = JSON.stringify([...oldTalkers, withNewTlkrId]);
+    await writeFile(path.resolve(__dirname, '../talker.json'), allTalkers);
+    return withNewTlkrId;
+  } catch (error) {
+    return console.error(`Erro: ${error}`);
+  }
+}
 
-module.exports = { talkerData /* handleLogin */ };
+module.exports = { talkerData, writeNemTlkrIdData };
