@@ -22,4 +22,17 @@ async function writeNemTlkrIdData(newTalker) {
   }
 }
 
-module.exports = { talkerData, writeNemTlkrIdData };
+async function upTalker(idtalker, upNewTalker) {
+  try {
+    const oldTalkers = await talkerData();
+    const index = oldTalkers.findIndex((talk) => talk.id === idtalker);
+    oldTalkers[index] = { id: idtalker, ...upNewTalker };
+    const talkers = JSON.stringify(oldTalkers);
+    await writeFile(path.resolve(__dirname, '../talker.json'), talkers);
+    return oldTalkers[index];
+  } catch (error) {
+    return console.error(`Erro: ${error}`);
+  }
+}
+
+module.exports = { talkerData, writeNemTlkrIdData, upTalker };
