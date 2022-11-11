@@ -1,4 +1,5 @@
 const { readFile, writeFile } = require('fs').promises;
+// const { fs } = require('fs');
 const path = require('path');
 
 async function talkerData() {
@@ -35,4 +36,24 @@ async function upTalker(idtalker, upNewTalker) {
   }
 }
 
-module.exports = { talkerData, writeNemTlkrIdData, upTalker };
+// async function deleteTalker(id) {
+//   const oldTalkers = await talkerData();
+//   const index = oldTalkers.findIndex((talker) => talker.id === id);
+//   oldTalkers.splice(index, 1);
+//   await fs.writeFile(path.resolve(__dirname, '../talker.json'), JSON.stringify(oldTalkers));
+//   return oldTalkers;
+// }
+
+const deleteTalker = async (id) => {
+  try {
+    const oldTalkers = await talkerData();
+    const filter = oldTalkers.filter((talk) => talk.id !== Number(id));
+    const allTalkers = JSON.stringify([...filter]);
+    await writeFile(path.resolve(__dirname, '../talker.json'), allTalkers);
+    return oldTalkers;
+  } catch (error) {
+    return console.error(`Erro: ${error}`);
+  }
+};
+
+module.exports = { talkerData, writeNemTlkrIdData, upTalker, deleteTalker };

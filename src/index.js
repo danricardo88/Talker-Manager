@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { talkerData, writeNemTlkrIdData, upTalker } = require('./util/talker');
+const { talkerData, writeNemTlkrIdData, upTalker, deleteTalker } = require('./util/talker');
 const { 
   handleLogin, 
   handleToken, 
@@ -18,6 +18,7 @@ app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const HTTP_OK_NEWTLKR = 201;
+const HTTP_DELETED_TLKR = 204;
 const HTTP_ERRO = 404;
 const PORT = '3000';
 
@@ -77,6 +78,12 @@ app.put('/talker/:id',
     const upTalkerData = _request.body;
     const talkerUp = await upTalker(Number(id), upTalkerData);
     return response.status(HTTP_OK_STATUS).json(talkerUp);
-  });
+});
+
+app.delete('/talker/:id', handleToken, async (_request, response) => {
+  const { id } = _request.params;
+  await deleteTalker(id);
+  return response.sendStatus(HTTP_DELETED_TLKR).end();
+});
 
 module.exports = app;
