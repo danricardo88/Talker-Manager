@@ -36,14 +36,6 @@ async function upTalker(idtalker, upNewTalker) {
   }
 }
 
-// async function deleteTalker(id) {
-//   const oldTalkers = await talkerData();
-//   const index = oldTalkers.findIndex((talker) => talker.id === id);
-//   oldTalkers.splice(index, 1);
-//   await fs.writeFile(path.resolve(__dirname, '../talker.json'), JSON.stringify(oldTalkers));
-//   return oldTalkers;
-// }
-
 const deleteTalker = async (id) => {
   try {
     const oldTalkers = await talkerData();

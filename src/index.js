@@ -10,8 +10,6 @@ const {
   handleValidityWatchedAt, 
   handleValidityRate } = require('./util/validations');
 
-// const { handleLogin } = require('./util/test');
-
 const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
@@ -22,11 +20,6 @@ const HTTP_DELETED_TLKR = 204;
 const HTTP_ERRO = 404;
 const PORT = '3000';
 
-// const NOT_VALIDATED = 400;
-// const testRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]{2-3}/i; <-- dando problema.
-// const tokenAleatorio = Math.random().toString().slice(-16);
-
-// não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });

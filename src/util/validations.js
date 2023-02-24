@@ -81,21 +81,6 @@ const handleValidityWatchedAt = (_request, response, prox) => {
   prox();
 };
 
-// const handleValidityWatchedAt = (_request, response, prox) => {
-//   const { watchedAt } = _request.body.talk;
-//   const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/([12][0-9]{3})$/;
-
-//   if (watchedAt === undefined) {
-//     return response.status(NOT_VALIDATED)
-//     .json({ message: 'O campo "watchedAt" é obrigatório' });
-//   } 
-//   if (!regex.test(watchedAt)) {
-//     return response.status(NOT_VALIDATED)
-//     .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-//   } 
-//   prox();
-// };
-
 const handleValidityRate = (_request, response, prox) => {
   const { rate } = _request.body.talk;
   if (rate === undefined) {
